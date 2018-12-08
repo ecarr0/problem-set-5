@@ -20,6 +20,7 @@ public class Tester {
 		try {
 			atm = new ATM();
 			atm.run();
+			return;
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

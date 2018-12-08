@@ -1,4 +1,3 @@
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 /**
@@ -20,13 +19,16 @@ public class BankAccount {
 	private double balance = 0.00;
 	private String status;
 	private DecimalFormat df2;
+	//private String df2;
+	//private String df3;
 	
 	public BankAccount(String account) {
 		this.user = new User(account.substring(48,63), account.substring(28,48), Integer.valueOf(account.substring(9, 13)), account.substring(63, 71), Long.valueOf(account.substring(71,81)), account.substring(81, 111), account.substring(111, 141), account.substring(141, 143), account.substring(143,148));
 		this.accountNumber = Long.valueOf(account.substring(0,9));
 		this.balance = Double.valueOf(account.substring(13, 28));
 		this.status = account.substring(148, 149);
-		this.df2 = new DecimalFormat (".##");
+		this.df2 = new DecimalFormat();
+		df2.setMaximumFractionDigits(2);
 	}
 	
 	public User getUser() {
@@ -34,48 +36,44 @@ public class BankAccount {
 	}
 	
 	public void Deposit(double amount) {
-		if(amount > 0.00) {
-			balance += amount;
-			System.out.printf("\nYou have successfully deposited $%.2f into your account.", amount);
-			//update file
+		if( amount <= 0 || !isValidDollarAmount(amount)) {
+			System.out.println("Invalid deposit amount.");
 		}
 		else {
-			System.out.println("Invalid deposit amount.");
+			this.balance += amount;
+			System.out.printf("\nYou have successfully deposited $%.2f into your account.", amount);
 		}
 	}
 	
 	public void Withdraw(double amount) {
-		if(amount >0.00 && amount <= balance) {
-			balance -= amount;
-			System.out.printf("\nYou have successfully withdrawn $%.2f from your account.", amount);
-			//update text file here
+		//df3 = new DecimalFormat("#.##").format(amount);
+		if( amount <= 0 || amount >= balance || !isValidDollarAmount(amount)) {
+			System.out.println("Invalid withdrawal amount.");
 		}
 		else {
-			System.out.println("Invalid withdrawal amount.");
+			this.balance -= amount;
+			System.out.printf("\nYou have successfully withdrawn $%.2f from your account.", amount);
 		}
 	}
 	
 	public void Transfer(BankAccount transferAcct, double amount) {
-		if(amount >= balance) {
+		//String df3 = new DecimalFormat("###############.##").format(amount);
+		if( amount <= 0 || amount >= balance || !isValidDollarAmount(amount)) {
 			System.out.println("Invalid transfer amount.");
 		}
 		else {
-			//transfer money
-			balance -= amount;
+			this.balance -= amount;
 			transferAcct.balance +=amount;
 			System.out.println("Transaction complete.");
-			//update file
 		}
 		
 	}
 	
 	public double getBalance() {
-		//this.balance = Database.setBalance(accountNumber);
 		return this.balance;
 	}
 	
 	public String getBalanceString() {
-		df2.setRoundingMode(RoundingMode.DOWN);
 		String balanceString = df2.format(this.balance);
 		return balanceString;
 	}
@@ -119,7 +117,21 @@ public class BankAccount {
 		bankAcctString += this.user.getState();
 		bankAcctString += this.user.getPostalCode();
 		bankAcctString += this.status;
-		System.out.println(bankAcctString);
+		//System.out.println(bankAcctString);
 		return bankAcctString;
+	}
+	
+	public boolean isValidDollarAmount(double amount) {
+		String amountString = Double.toString(amount);
+		for(int i = 0; i < amountString.length(); i++) {
+			if(amountString.charAt(i) == '.') {
+				int numberOver = amountString.length() - i;
+				if(numberOver > 3) {
+					return false;
+				}
+				return true;
+			}
+		}
+		return true;
 	}
 }

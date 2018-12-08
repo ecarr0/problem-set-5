@@ -81,7 +81,7 @@ public class Database {
 		}
 		
 		if (newAccount) {
-			System.out.println(account.toString());
+			//System.out.println(account.toString());
 			accounts = Arrays.copyOf(accounts, accounts.length + 1);
 			accounts[accounts.length - 1] = account.toString();
 		}

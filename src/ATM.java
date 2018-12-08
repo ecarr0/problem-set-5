@@ -15,25 +15,21 @@ import java.io.IOException;
 import java.util.Scanner;
 
 
-
 public class ATM {
 	private Database db;
 	private BankAccount account;
 	private BankAccount transferAcct;
-	private BankAccount original;
-	//private long numActs;
-	//private int userInput;
+
 	
 	public Scanner in;
 	
 	public ATM() throws FileNotFoundException, IOException {
 		db = new Database("accounts-db.txt");
 		in = new Scanner(System.in);
-		//numActs = db.getMaxAccountNumber();
 	}
 	
 	public void run() throws FileNotFoundException, IOException {
-		System.out.println("Welcome to your ATM!");
+		System.out.println("Welcome to your ATM!\n");
 		System.out.println("Please enter one of the options listed below:\n\n");
 		System.out.println("[1] Open Account");
 		System.out.println("[2] Log in");
@@ -55,6 +51,8 @@ public class ATM {
 		}
 		else {
 			System.out.println("Thank you for using this ATM. Have a nice day! :)");
+			in.close();
+			return;
 		}
 	}
 	
@@ -64,31 +62,22 @@ public class ATM {
 		long accountNumber = in.nextLong();
 		System.out.printf("Pin Number: ");
 		int pin = in.nextInt();
-		if(db.getAccount(accountNumber) != null) {
+		if(db.getAccount(accountNumber) != null && (Long.toString(accountNumber).length() == 9)) {
 			account = new BankAccount(db.getAccount(accountNumber));
-			original = new BankAccount(db.getAccount(accountNumber));
+			//original = new BankAccount(db.getAccount(accountNumber));
 			//User user;
 			if(pin == account.getUser().getPin()) {
-				System.out.println("Sign in successful.");
+				System.out.println("Sign in successful.\n\n");
 				BankAccountFunctions();
-				//User user = new User(Database.setFirstName(accountNumber), Database.setLastName(accountNumber), Database.setPin(accountNumber), Database.setBirthDate(accountNumber), Database.setPhoneNumber(accountNumber), Database.setAddress(accountNumber), Database.setCity(accountNumber), Database.setState(accountNumber), Database.setPostalCode(accountNumber));
-				//BankAccount bankAccount;
-				//try {
-					//bankAccount = new BankAccount(user, accountNumber, Database.setBalance(accountNumber));
-					//BankAccountFunctions(user, bankAccount);
-				//} catch (Exception e) {
-					// TODO Auto-generated catch block
-					//e.printStackTrace();
-				//}
-				
+				//return;
 			}
 			else {
-				System.out.println("You have entered an invalid account number or pin number. PIN. Please try again.");
+				System.out.println("You have entered an invalid account number or pin number. Please try again.");
 				signIn();
 			}
 		}
 		else {
-			System.out.println("You have entered an invalid account number or pin number. ACCT NUM. Please try again.");
+			System.out.println("You have entered an invalid account number or pin number. Please try again.");
 			signIn();
 		}
 	}
@@ -117,7 +106,7 @@ public class ATM {
 		in.nextLine();
 		System.out.println("Last Name: ");
 		newAcct += String.format("%1$-20s", in.nextLine());
-		System.out.println(newAcct);
+		//System.out.println(newAcct);
 		System.out.println("First Name: ");
 		newAcct += String.format("%1$-15s", in.nextLine());
 		wrong = true;
@@ -207,7 +196,6 @@ public class ATM {
 		db.updateAccount(newAccount, null);
 		System.out.println("Please sign in with your new credentials.");
 		run();
-		
 	}
 	
 	public void BankAccountFunctions() throws FileNotFoundException, IOException {
@@ -223,7 +211,8 @@ public class ATM {
 			System.out.println("[7] Close Account");
 			System.out.println("[8] Log off");
 			
-			int userInput = in.nextInt();
+			int userInput;
+			userInput = in.nextInt();
 			
 			while(userInput > 8 || userInput < 1) {
 				System.out.println("Invalid response. Try again.");
@@ -235,6 +224,7 @@ public class ATM {
 				System.out.println("Deposit Amount: ");
 				double amount = in.nextDouble();
 				account.Deposit(amount);
+				db.updateAccount(account, null);
 			}
 			
 			else if(userInput == 2) {
@@ -242,6 +232,7 @@ public class ATM {
 				System.out.println("Withdrawal Amount: ");
 				double amount = in.nextDouble();
 				account.Withdraw(amount);
+				db.updateAccount(account, null);
 			}
 			
 			else if(userInput == 3) {
@@ -256,6 +247,7 @@ public class ATM {
 					System.out.println("Transfer Amount: ");
 					double amount = in.nextDouble();
 					account.Transfer(transferAcct, amount);
+					db.updateAccount(account, transferAcct);
 				}
 				else {
 					System.out.println("Invalid account number.");
@@ -276,17 +268,21 @@ public class ATM {
 			}
 			
 			else if(userInput == 7) {
-				updateAcctInfo(account, 0);			
+				updateAcctInfo(account, 0);		
+				closeSession();
+				done = true;
+				//return;
 			}
 			
 			else {
+				//done = true;
+				System.out.println("You have been logged out.\n\n");
+				closeSession();
 				done = true;
-				System.out.println("You have been logged out. Thank you for using this ATM!");
-				db.updateAccount(account, transferAcct);
-				//in.close();
+				//return;
 			}
 		}
-		
+		//return;
 	}
 	
 	public void updateAcctInfo(BankAccount account, int choice) throws IOException {
@@ -294,74 +290,82 @@ public class ATM {
 		
 		if(choice == 0) {
 			System.out.println("Are you sure you want to close your account? Press Y/N");//Database.setStatus(accountNumber);
+			in.nextLine();
 			String input = in.nextLine();
 			input = input.toLowerCase();
 			if(input.equals("y")) {
 				account.setStatus();
 			}
-			System.out.println("Your account has been deleted. Thank You. for using this ATM!");
-			db.updateAccount(original, account);
-			in.close();
-			return;
-		}
-		
-		System.out.println("Please select one of the following numbers to update your account information: ");
-		System.out.println("[1] Pin");
-		System.out.println("[2] Telephone Number");
-		System.out.println("[3] Street Address");
-		System.out.println("[4] City");
-		System.out.println("[5] State");
-		System.out.println("[6] Postal Code");
-		
-		//Scanner in = new Scanner(System.in);
-		
-		choice = in.nextInt();
-		
-		if(choice == 1) {
-			account.getUser().setPin();
-		}
-		else if(choice == 2) {
-			System.out.printf("Enter your new phone number: ");
-			long newPhoneNumber = in.nextLong();
-			account.getUser().setPhoneNumber(newPhoneNumber);
-		}
-		else if(choice == 3) {
-			System.out.printf("Enter your new street address: ");
-			String newAddress = in.nextLine();
-			account.getUser().setAddress(newAddress);
-		}
-		else if(choice == 4) {
-			System.out.printf("Enter your new city: ");
-			String newCity = in.nextLine();
-			account.getUser().setCity(newCity);
-		}
-		else if(choice == 5) {
-			System.out.printf("Enter your new state: ");
-			String newState = in.nextLine();
-			account.getUser().setState(newState);
-		}
-		else if(choice == 6) {
-			boolean wrong = true;
-			String newPostalCodeString = "";
-			while (wrong) { 
-				System.out.printf("Enter your new postal code: ");
-				newPostalCodeString = in.nextLine();
-				if(newPostalCodeString.length() != 5) {
-					System.out.println("Invaid postal code. Please try again.");
-				}
-				else {
-					wrong = false;
-				}
-			}
-			account.getUser().setPostalCode(newPostalCodeString);
+			System.out.println("Your account has been deleted."); 
+			//return;
 		}
 		else {
-			System.out.println("Invaid Input");
+			System.out.println("Please select one of the following numbers to update your account information: ");
+			System.out.println("[1] Pin");
+			System.out.println("[2] Telephone Number");
+			System.out.println("[3] Street Address");
+			System.out.println("[4] City");
+			System.out.println("[5] State");
+			System.out.println("[6] Postal Code");
+			
+			//Scanner in = new Scanner(System.in);
+			
+			choice = in.nextInt();
+			
+			if(choice == 1) {
+				account.getUser().setPin();
+			}
+			else if(choice == 2) {
+				System.out.printf("Enter your new phone number: ");
+				long newPhoneNumber = in.nextLong();
+				account.getUser().setPhoneNumber(newPhoneNumber);
+			}
+			else if(choice == 3) {
+				System.out.printf("Enter your new street address: ");
+				String newAddress = in.nextLine();
+				account.getUser().setAddress(newAddress);
+			}
+			else if(choice == 4) {
+				System.out.printf("Enter your new city: ");
+				String newCity = in.nextLine();
+				account.getUser().setCity(newCity);
+			}
+			else if(choice == 5) {
+				System.out.printf("Enter your new state: ");
+				String newState = in.nextLine();
+				account.getUser().setState(newState);
+			}
+			else if(choice == 6) {
+				boolean wrong = true;
+				String newPostalCodeString = "";
+				while (wrong) { 
+					System.out.printf("Enter your new postal code: ");
+					newPostalCodeString = in.nextLine();
+					if(newPostalCodeString.length() != 5) {
+						System.out.println("Invaid postal code. Please try again.");
+					}
+					else {
+						wrong = false;
+					}
+				}
+				account.getUser().setPostalCode(newPostalCodeString);
+			}
+			else {
+				System.out.println("Invaid Input");
+				//in.close();
+			}
 			//in.close();
+			//return original;
+			//Database.updateAccount(original, account);
 		}
-		//in.close();
-		//return original;
-		//Database.updateAccount(original, account);
+		
 	}
 	
+	public void closeSession() throws IOException {
+		//System.out.println("Thank You. for using this ATM!");
+		db.updateAccount(account, transferAcct);
+		run();
+		//in.close();
+		//return;
+	}
 }
