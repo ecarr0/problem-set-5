@@ -22,7 +22,6 @@ public class User {
 	private String state;
 	private String postalCode;
 	public Scanner in = new Scanner(System.in);
-	//insert new account number?
 	
 	public User(String firstName, String lastName, int pin, String dateOfBirth, long phoneNumber, String address, String city, String state, String postalCode) {
 		this.firstName = firstName;
@@ -71,7 +70,6 @@ public class User {
 	
 	public void setPhoneNumber(long newPhoneNumber) {
 		this.phoneNumber = newPhoneNumber;
-		//update database
 	}
 	
 	public String getAddress() {
@@ -80,7 +78,6 @@ public class User {
 	
 	public void setAddress(String newAddress) {
 		this.address = newAddress;
-		//update database
 	}
 	
 	public String getCity() {
@@ -89,7 +86,6 @@ public class User {
 	
 	public void setCity(String newCity) {
 		this.city = newCity;
-		//update database
 	}
 	
 	public String getState() {
@@ -98,7 +94,6 @@ public class User {
 	
 	public void setState(String newState) {
 		this.state = newState;
-		//update database
 	}
 	
 	public String getPostalCode() {
@@ -107,7 +102,6 @@ public class User {
 	
 	public void setPostalCode(String newPostalCode) {
 		this.postalCode = newPostalCode;
-		//update database
 	}
 	
 }

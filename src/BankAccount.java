@@ -11,16 +11,13 @@ import java.text.DecimalFormat;
  */
 
 
-//import java.util.Scanner;
-
 public class BankAccount {
 	private User user;
 	private long accountNumber;
 	private double balance = 0.00;
 	private String status;
 	private DecimalFormat df2;
-	//private String df2;
-	//private String df3;
+
 	
 	public BankAccount(String account) {
 		this.user = new User(account.substring(48,63), account.substring(28,48), Integer.valueOf(account.substring(9, 13)), account.substring(63, 71), Long.valueOf(account.substring(71,81)), account.substring(81, 111), account.substring(111, 141), account.substring(141, 143), account.substring(143,148));
@@ -41,18 +38,17 @@ public class BankAccount {
 		}
 		else {
 			this.balance += amount;
-			System.out.printf("\nYou have successfully deposited $%.2f into your account.", amount);
+			System.out.printf("\nYou have successfully deposited $%.2f into your account.\n", amount);
 		}
 	}
 	
 	public void Withdraw(double amount) {
-		//df3 = new DecimalFormat("#.##").format(amount);
 		if( amount <= 0 || amount >= balance || !isValidDollarAmount(amount)) {
 			System.out.println("Invalid withdrawal amount.");
 		}
 		else {
 			this.balance -= amount;
-			System.out.printf("\nYou have successfully withdrawn $%.2f from your account.", amount);
+			System.out.printf("\nYou have successfully withdrawn $%.2f from your account.\n", amount);
 		}
 	}
 	
@@ -64,7 +60,7 @@ public class BankAccount {
 		else {
 			this.balance -= amount;
 			transferAcct.balance +=amount;
-			System.out.println("Transaction complete.");
+			System.out.println("Transaction complete.\n");
 		}
 		
 	}
@@ -83,7 +79,7 @@ public class BankAccount {
 	}
 	
 	public void viewBalance() {
-		System.out.printf("Your current balance is: $%.2f.\n\n", balance);
+		System.out.printf("Your current balance is: $%.2f.\n", balance);
 	}
 	
 	public void viewAcctInfo() {
@@ -117,7 +113,6 @@ public class BankAccount {
 		bankAcctString += this.user.getState();
 		bankAcctString += this.user.getPostalCode();
 		bankAcctString += this.status;
-		//System.out.println(bankAcctString);
 		return bankAcctString;
 	}
 	
