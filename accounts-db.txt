@@ -1,4 +1,4 @@
-1000000011234123.45         Wilson              Ryan           197101105551234567123 Main Street               Scotch Plains                 NJ07076Y
+1000000011234123.45         Wilson              Ryan           197101105551234567123 Main Street               Scotch Plains                 NJ07076N
 1000000025678678.90         Smith               John           197202115552345678123 First Avenue              Rahway                        NJ07065Y
 10000000390121234.56        Johnson             Cindy          197303125553456789123 Second Street             Linden                        NJ07036Y
 10000000434567890.12        Black               Janet          197404135554567890123 Ocean Avenue              Elizabeth                     NJ07091Y

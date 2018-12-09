@@ -47,17 +47,8 @@ public class User {
 		return this.pin;
 	}
 	
-	public void setPin() {
-		System.out.println("Enter your existing pin number: ");
-		int checkPin = in.nextInt();
-		if(checkPin == this.pin) {
-			System.out.println("Pin verified. Please enter your new pin number: ");
-			int newPin = in.nextInt();
-			this.pin = newPin;
-		}
-		else {
-			System.out.println("Incorrect response.");
-		}
+	public void setPin(int newPin) {
+		this.pin = newPin;
 	}
 	
 	public String getDateOfBirth() {

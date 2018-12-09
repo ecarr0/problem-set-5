@@ -43,7 +43,7 @@ public class BankAccount {
 	}
 	
 	public void Withdraw(double amount) {
-		if( amount <= 0 || amount >= balance || !isValidDollarAmount(amount)) {
+		if( amount <= 0 || amount > this.balance || !isValidDollarAmount(amount)) {
 			System.out.println("Invalid withdrawal amount.");
 		}
 		else {
@@ -54,12 +54,12 @@ public class BankAccount {
 	
 	public void Transfer(BankAccount transferAcct, double amount) {
 		//String df3 = new DecimalFormat("###############.##").format(amount);
-		if( amount <= 0 || amount >= balance || !isValidDollarAmount(amount)) {
+		if( amount <= 0 || amount > this.balance || !isValidDollarAmount(amount)) {
 			System.out.println("Invalid transfer amount.");
 		}
 		else {
 			this.balance -= amount;
-			transferAcct.balance +=amount;
+			transferAcct.balance += amount;
 			System.out.println("Transaction complete.\n");
 		}
 		
@@ -70,7 +70,11 @@ public class BankAccount {
 	}
 	
 	public String getBalanceString() {
-		String balanceString = df2.format(this.balance);
+		String balanceString = "";
+		if(this.balance < 1) {
+			//balanceString = "0";
+		}
+		balanceString += df2.format(this.balance);
 		return balanceString;
 	}
 	
@@ -87,7 +91,7 @@ public class BankAccount {
 		System.out.println("First Name: " + user.getFirstName());
 		System.out.println("Last Name: " + user.getLastName());
 		System.out.println("Pin: " + user.getPin());
-		System.out.println("Date of Birth: " + user.getDateOfBirth());
+		System.out.println("Date of Birth: " + user.getDateOfBirth().substring(4,6) + "/" + user.getDateOfBirth().substring(6,8) + "/" + user.getDateOfBirth().substring(0,4));
 		System.out.println("Telephone Number: " + user.getPhoneNumber());
 		System.out.println("Street Address: " + user.getAddress());
 		System.out.println("City: " + user.getCity());
@@ -128,5 +132,9 @@ public class BankAccount {
 			}
 		}
 		return true;
+	}
+	
+	public String getStatus() {
+		return this.status;
 	}
 }

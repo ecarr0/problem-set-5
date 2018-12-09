@@ -19,12 +19,16 @@ public class Tester {
 		ATM atm;
 		try {
 			atm = new ATM();
+			System.out.println("Welcome to your ATM!");
 			atm.run();
 			return;
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
